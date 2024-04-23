@@ -2,21 +2,23 @@ package main
 
 import "fmt"
 
-func updateMenu(menu map[string]float64) {
-	menu["orange"] = 6.00
+func updateName(m *string) {
+	*m = "Name2"
 }
 
 func main() {
 
-	// Group 2: map, slice, function
+	name := "Name1"
 
-	menu := map[string]float64{
-		"pie":   4.99,
-		"apple": 3.00,
-	}
+	m := &name
 
-	updateMenu(menu)
+	fmt.Println("memory location of the variable is: ", m)
+	fmt.Println("value at memory address: ", *m)
 
-	fmt.Println(menu)
+	fmt.Println(name)
+
+	updateName(m)
+
+	fmt.Println(name)
 
 }
