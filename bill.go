@@ -1,6 +1,9 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"os"
+)
 
 // struct pointers are automatically dereferened
 // in the below receiver funcation, upon passing struct pointer, we only need to
@@ -26,6 +29,7 @@ func newBill(name string) bill {
 }
 
 // format the bill: Reciever function, binding this function with 'bill'
+// (b *bill) - by adding this before function name, this functions is mapped (encapsulated) with the struc 'bill
 func (b *bill) format() string {
 	fs := "Bill breakdown: \n"
 	var total float64 = 0
@@ -47,4 +51,12 @@ func (b *bill) updateTip(tip float64) {
 
 func (b *bill) addItem(name string, price float64) {
 	b.items[name] = price
+}
+
+func (b *bill) save() {
+	data := []byte(b.format())
+	err := os.WriteFile("bills/"+b.name+".txt", data, 0644)
+	if err != nil {
+		panic(err)
+	}
 }
