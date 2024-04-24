@@ -1,72 +1,54 @@
 package main
 
 import (
-	"bufio"
 	"fmt"
-	"os"
-	"strconv"
-	"strings"
+	"math"
 )
 
-func getInput(propmt string, r *bufio.Reader) (string, error) {
-	fmt.Print(propmt + ": ")
-	input, err := r.ReadString('\n')
-	return strings.TrimSpace(input), err
+// shape interface
+type shape interface {
+	area() float64
+	circumf() float64
 }
 
-func createBill() bill {
-	reader := bufio.NewReader(os.Stdin)
-
-	name, _ := getInput("Create a new bill name", reader)
-
-	myBill := newBill(name)
-	fmt.Println(">>> Created the bill - ", myBill.name)
-
-	myBill = newBill("varun's bill")
-	return myBill
+type square struct {
+	length float64
+}
+type circle struct {
+	radius float64
 }
 
-func promptOptions(b bill) {
-	reader := bufio.NewReader(os.Stdin)
+// square methods
+func (s square) area() float64 {
+	return s.length * s.length
+}
+func (s square) circumf() float64 {
+	return s.length * 4
+}
 
-	opt, _ := getInput("Choose option (a - add item, s - save bill, t - add tip, q - quit)", reader)
+// circle methods
+func (c circle) area() float64 {
+	return math.Pi * c.radius * c.radius
+}
+func (c circle) circumf() float64 {
+	return 2 * math.Pi * c.radius
+}
 
-	switch opt {
-	case "a":
-		name, _ := getInput("Enter Item Name", reader)
-		price, _ := getInput("Enter item price", reader)
-		price_float, err := strconv.ParseFloat(price, 64)
-		if err != nil {
-			fmt.Println("value must be an integer")
-			promptOptions(b)
-		}
-		b.addItem(name, price_float)
-		fmt.Println(">>> Item Added - ", name, price)
-		promptOptions(b)
-	case "t":
-		tip, _ := getInput("Enter tip ($)", reader)
-		tip_float, err := strconv.ParseFloat(tip, 64)
-		if err != nil {
-			fmt.Println("value must be an integer")
-			promptOptions(b)
-		}
-		b.updateTip(tip_float)
-		fmt.Println(">>> Tip Added - ", tip)
-		promptOptions(b)
-	case "s":
-		b.save()
-	case "q":
-		fmt.Println("Bye Bye")
-		return
-	default:
-		fmt.Println("invalid option...!")
-		promptOptions(b)
-	}
+func printShapeInfo(s shape) {
+	fmt.Printf("area of %T is: %0.2f \n", s, s.area())
+	fmt.Printf("circumference of %T is: %0.2f \n", s, s.circumf())
 }
 
 func main() {
-	var myBill bill = createBill()
-	promptOptions(myBill)
-	fmt.Println(myBill.format())
+	shapes := []shape{
+		square{length: 15.2},
+		circle{radius: 7.5},
+		circle{radius: 12.3},
+		square{length: 4.9},
+	}
 
+	for _, v := range shapes {
+		printShapeInfo(v)
+		fmt.Println("---")
+	}
 }
